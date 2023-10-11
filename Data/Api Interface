@@ -1,0 +1,6 @@
+interface CountriesApi {
+
+   @GET(Constants.COUNTRIES_GET_ALL_END_POINT)
+   suspend fun getCountries(): List<CountryItemDto>
+
+}
