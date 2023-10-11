@@ -1,0 +1,5 @@
+class GetAllCountriesUseCase(private val repository: Repository) {
+   suspend operator fun invoke(): List<CountryItem> {
+       return repository.getCountries().map { it.toCountryItem() }
+   }
+}
