@@ -30,3 +30,26 @@ abstract class BaseActivity: AppCompatActivity() {
        window.navigationBarColor= color;
    }
 }
+
+
+
+class MainActivity : BaseActivity() {
+    private lateinit var binding: ActivityMainBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+
+        val view = binding.root
+
+        setContentView(view)
+
+        view.setOnTouchListener { _, _ ->
+            hideSoftKeyword(this)
+            false
+        }
+   }
+
+}
