@@ -1,0 +1,94 @@
+//Intent Extras
+
+// Sending data
+val intent = Intent(this, SecondActivity::class.java)
+intent.putExtra("key", "value")
+startActivity(intent)
+
+// Receiving data
+val data = intent.getStringExtra("key")
+
+
+
+//Bundle
+
+// Sending data
+val bundle = Bundle()
+bundle.putString("key1", "value1")
+bundle.putInt("key2", 42)
+val intent = Intent(this, SecondActivity::class.java)
+intent.putExtras(bundle)
+startActivity(intent)
+
+// Receiving data
+val bundle = intent.extras
+val data1 = bundle?.getString("key1")
+val data2 = bundle?.getInt("key2")
+
+//Parceable
+
+// Custom Class
+@Parcelize
+data class Person(val name: String, val age: Int): Parcelable
+
+// Sending data
+val person = Person("John", 30)
+val intent = Intent(this, SecondActivity::class.java)
+intent.putExtra("person", person)
+startActivity(intent)
+
+// Receiving data
+val person = intent.getParcelableExtra<Person>("person")
+
+//Singleton
+
+object DataManager {
+    var data: String = "default"
+}
+
+// Use DataManager.data to get or set data
+
+//Shared Preferences
+
+// Saving data
+val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+with(sharedPref.edit()) {
+    putString("key", "value")
+    apply()
+}
+
+// Reading data
+val defaultValue = "default"
+val data = sharedPref.getString("key", defaultValue)
+
+
+//Sql Lite
+
+// In your SQLiteHelper class
+fun addUser(name: String, age: Int) {
+    val db = this.writableDatabase
+    val contentValues = ContentValues()
+    contentValues.put("name", name)
+    contentValues.put("age", age)
+    db.insert("users", null, contentValues)
+}
+
+fun getUser(name: String): Cursor {
+    val db = this.readableDatabase
+    return db.rawQuery("SELECT * FROM users WHERE name = ?", arrayOf(name))
+}
+
+// In Activity1
+val dbHelper = SQLiteHelper(this)
+dbHelper.addUser("John", 30)
+
+// In Activity2
+val dbHelper = SQLiteHelper(this)
+val cursor = dbHelper.getUser("John")
+if (cursor.moveToFirst()) {
+    val name = cursor.getString(cursor.getColumnIndex("name"))
+    val age = cursor.getInt(cursor.getColumnIndex("age"))
+}
+
+
+
