@@ -46,10 +46,7 @@ class MainActivity : BaseActivity() {
 
         setContentView(view)
 
-        view.setOnTouchListener { _, _ ->
-            hideSoftKeyword(this)
-            false
-        }
+  
    }
 
 }
