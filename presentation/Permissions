@@ -1,3 +1,5 @@
+//MUST ADD PERMISSIONS TO MANIFEST FIRST
+
 // Override the onCreate method of the activity
 override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
