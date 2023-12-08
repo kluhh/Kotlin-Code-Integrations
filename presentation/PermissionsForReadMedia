@@ -1,0 +1,129 @@
+
+class MainActivity: AppCompatActivity(){
+
+private lateinit var getContent: ActivityResultLauncher<String>
+
+  override fun onCreate(savedInstanceState: Bundle?)
+    {
+        super.onCreate(savedInstanceState)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
+      getContent =
+            registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+                // Handle the result here
+                try
+                {
+                    if (uri != null)
+                    {
+                        binding.ivBackground.visibility = View.VISIBLE
+                        binding.ivBackground.setImageURI(uri)
+
+                    }
+                    else
+                    {
+                        Toast.makeText(this, "Error in parsing the image or its corrupted",Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+                catch (e: Exception)
+                {
+                    e.printStackTrace()
+                }
+
+            }
+
+        binding.ibGallery.setOnClickListener {
+            if (isReadStorageAllowed())
+            {
+
+                getContent.launch("image/*")
+
+            }
+            else
+            {
+                requestStoragePermission()
+            }
+
+        }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun requestStoragePermission()
+    {
+        if (
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                arrayOf(
+                    Manifest.permission.READ_MEDIA_IMAGES,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE).toString())
+
+        )
+        {
+            Toast.makeText(this, "Need permission to add a Background Image", Toast.LENGTH_SHORT)
+                .show()
+        }
+        else
+        {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.READ_MEDIA_IMAGES,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                STORAGE_PERMISSION_CODE
+
+            )
+
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    )
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == STORAGE_PERMISSION_CODE)
+        {
+            if (grantResults.isNotEmpty()
+                &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED
+            )
+            {
+                Toast.makeText(
+                    this,
+                    "Permission granted now you can read the storage file.",
+                    Toast.LENGTH_SHORT).show()
+
+            }
+            else
+            {
+                Toast.makeText(
+                    this,
+                    "Permission Denied",
+                    Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun isReadStorageAllowed(): Boolean
+    {
+        val result = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
+
+        return result == PackageManager.PERMISSION_GRANTED
+    }
+
+    companion object
+    {
+        private const val STORAGE_PERMISSION_CODE = 1
+    }
+
+
+
+    }
+
+}
